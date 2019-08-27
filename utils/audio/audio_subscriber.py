@@ -19,13 +19,13 @@ import json
 import os
 
 config = configparser.ConfigParser()
-config.read('cht.conf')
+config.read('../cht.conf')
 projectKey = config.get('device-key', 'projectKey')
-deviceId   = config.get('device-key', 'deviceId')
-sensorId    = config.get('device-key', 'sensorId')
+deviceId   = config.get('device-key', 'audioDeviceId')
+audioSensorId    = config.get('device-key', 'audioSensorId')
 
 host = "iot.cht.com.tw"
-topic = '/v1/device/' + deviceId + '/sensor/' + sensorId + '/rawdata'
+topic = '/v1/device/' + deviceId + '/sensor/' + audioSensorId + '/rawdata'
 
 def on_connect(client, userdata, flags, rc):
     print("Audio connected with result code: {}".format(str(rc)))

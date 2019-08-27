@@ -76,9 +76,9 @@ if __name__ == "__main__":
     file_name = sys.argv[1]
     seconds = sys.argv[2]
     collector = CollectSensorData(file_name)
-    collector.combine_data()
+    #collector.combine_data()
     
-    '''
+    
     for i in range(5, 0, -1):
         print('Collector will start in {0} seconds.'.format(str(i)))
         collector.get_sensor_data()
@@ -86,12 +86,12 @@ if __name__ == "__main__":
     print()
     for i in range(10):
         collector.get_sensor_data()
-        time.sleep(0.5)
+        time.sleep(0.2)
     for i in range(int(seconds)):
         print()
         collector.get_sensor_data()
         collector.get_average_data()
-        time.sleep(0.5)
+        time.sleep(0.2)
     collector.save()
-    '''
+    
 
