@@ -4,7 +4,7 @@ import time
 # set up GPIO output channel, we set GPIO4 (Pin 7) to OUTPUT
 channels = 7
 
-class motor():
+class Motor():
     def __init__(self):
         # to use Raspberry Pi board pin numbers
         GPIO.setmode(GPIO.BOARD)
@@ -21,5 +21,5 @@ class motor():
         GPIO.output(channels, GPIO.LOW)
 
 if __name__ == "__main__":
-    start_motor = motor()
+    start_motor = Motor()
     start_motor.active(3)
