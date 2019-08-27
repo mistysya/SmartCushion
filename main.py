@@ -1,17 +1,22 @@
+import sys
 import json
 import time
+import numpy as np
 import requests
 import datetime
+from utils.sensor_data_collector import SensorDataCollector
 
 class SmartCushion():
     def __init__(self):
+        self.sensor_collector = SensorDataCollector()
         pass
 
     def run(self):
         self.sensor_datas = self.get_sensor_data()
         self.send_sensor_data_to_platform()
-        '''
         self.sitting_result = self.get_sitting_result()
+        print(self.sitting_result)
+        '''
         # self.send_sitting_result_to_web(sitting_result)
         if self.is_sitting_result_wrong(self.sitting_result):
             self.give_shock()
@@ -21,11 +26,8 @@ class SmartCushion():
 
     def get_sensor_data(self):
         # for test
-        import random
-        sensor_data = []
-        for _ in range(8):
-            sensor_data.append(random.randint(0,20000))
-        print(sensor_data)
+        sensor_data = self.sensor_collector.get_sensor_data()
+        print('Sensor : {0}'.format(sensor_data))
         return sensor_data
 
     def send_sensor_data_to_platform(self):
@@ -45,14 +47,25 @@ class SmartCushion():
 
     def get_sitting_result(self):
         url = "https://iot.cht.com.tw/apis/CHTIoT"
-        device_path = "/bigdata/v1/prediction/modelID"
-        params = {'modelId':'string', 'X-API-KEY':'string'}
+        device_path = "/bigdata/v1/prediction/dr1bp0qn5"
+        headers = {'X-API-KEY':'a42252b2-b8dc-4b74-aad1-a46efcbcbb24',
+                   'accept':'application/json',
+                   'Content-Type':'application/json'}
         # get latest 30 data from sensor_data
         # remove peak data
         # get average of latest 20 data
-        data = {'feeatures': []}
-        sitting_result = requests.get(url + device_path, params=params, data=data)
-        return sitting_result
+        '''
+        file_path = sys.path[0] + '\\train.npy'
+        predict_data = np.load(file_path)
+        predict_data = predict_data.astype(int)
+        data = predict_data[0,:-1]
+        send = {'features': data.tolist()}
+        '''
+        send = {'features': self.sensor_datas}
+        #print(send)
+        sitting_result = requests.post(url + device_path, headers=headers, json=send)
+        result = sitting_result.json()
+        return int(result['value'])
 
     # try to use subscription
     # def send_sitting_result_to_web(self):
@@ -81,3 +94,5 @@ class SmartCushion():
 if __name__ == "__main__":
     cushion = SmartCushion()
     cushion.run()
+    # r = cushion.get_sitting_result()
+    # print(r)

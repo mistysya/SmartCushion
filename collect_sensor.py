@@ -59,11 +59,26 @@ class CollectSensorData():
         print('Average: {0}'.format(average_data))
         return average_data
 
+    def combine_data(self):
+        all_data = np.zeros((1, 8))
+        for k in pose_table:
+            file_path = sys.path[0] + '/' + k + '.npy'
+            if os.path.isfile(file_path):
+                data = np.load(file_path)
+                all_data = np.vstack((all_data, data))
+        all_data = all_data[1:,:]
+        file_path = sys.path[0] + '/train.npy'
+        np.save(file_path, all_data)
+        np.savetxt(sys.path[0] + '/train.txt', all_data, delimiter=',', fmt='%d')
+
 if __name__ == "__main__":
     print('start')
     file_name = sys.argv[1]
     seconds = sys.argv[2]
     collector = CollectSensorData(file_name)
+    collector.combine_data()
+    
+    '''
     for i in range(5, 0, -1):
         print('Collector will start in {0} seconds.'.format(str(i)))
         collector.get_sensor_data()
@@ -78,3 +93,5 @@ if __name__ == "__main__":
         collector.get_average_data()
         time.sleep(0.5)
     collector.save()
+    '''
+
