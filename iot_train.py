@@ -37,7 +37,7 @@ class Train():
         iot_format_datas.append(data)
         print(iot_format_datas)
         print()
-        # r = requests.post(url + device_path, json=iot_format_datas, headers=headers)
+        r = requests.post(url + device_path, json=iot_format_datas, headers=headers)
         #print(r)
         #print(r.text)
 
@@ -49,26 +49,20 @@ class Train():
     
     def delete_sensor_data(self):
         url = "https://iot.cht.com.tw/iot/v1"
-        device_path = "/device/18351549814/rawdata"
+        device_path = "/device/18351549814/"
         current_time = datetime.datetime.now().isoformat()
+        payload = {'start': '2019-08-26T23:55:00Z', 'end': '2019-08-28T23:55:00Z'}
         for index in range(7):
-            headers = {'CK':'PKVRB0L9OF0CMISRNT',
-                       'device_id':'18351549814',
-                       'sensor_id':'sensor_' + str(index + 1),
-                       'start':'2019-08-25T23:55:00Z',
-                       'end':current_time}
-            r = requests.post(url + device_path, headers=headers)
-        
-        headers = {'CK':'PKVRB0L9OF0CMISRNT',
-                    'device_id':'18351549814',
-                    'sensor_id':[str(sensor_data[-1])],
-                    'start':'2019-08-25T23:55:00Z',
-                    'end':current_time}
-        r = requests.post(url + device_path, headers=headers)
+            sensor_path = 'sensor/sensor_' + str(index + 1) + '/rawdata'
+            headers = {'CK':'DKW2SAGYXA00924EMZ'}
+            r = requests.delete(url + device_path + sensor_path, headers=headers, params=payload)
+        sensor_path = 'sensor/pose/rawdata'
+        headers = {'CK':'DKW2SAGYXA00924EMZ'}
+        r = requests.delete(url + device_path + sensor_path, headers=headers, params=payload)
 
 if __name__ == '__main__':
     pose_type = sys.argv[1]
     print(pose_type)
     train_data_upload = Train(pose_type)
-    # train_data_upload.run()
-    train_data_upload.delete_sensor_data()
+    train_data_upload.run()
+    # train_data_upload.delete_sensor_data()
