@@ -111,10 +111,12 @@ class SmartCushion():
 
     def is_sitting_result_wrong(self):
         appear_count = {}
-        for i in range(4):
-            appear_count[str(i)] = self.sitting_history.count(i)
+        history = list(self.sitting_history)
+        for i in range(6):
+            appear_count[str(i)] = history[2:].count(i)
         maximum = max(appear_count.items(), key=operator.itemgetter(1))[0]
-        if appear_count[maximum] > 1:
+        print("Maximum:", maximum)
+        if appear_count[maximum] > 2:
             self.send_sitting_result_to_web(maximum)
             print("Now pose:", maximum)
             if maximum != '0' and maximum != 0:
