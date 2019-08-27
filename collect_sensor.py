@@ -71,10 +71,10 @@ if __name__ == "__main__":
     print()
     for i in range(10):
         collector.get_sensor_data()
-        time.sleep(1)
+        time.sleep(0.5)
     for i in range(int(seconds)):
         print()
         collector.get_sensor_data()
         collector.get_average_data()
-        time.sleep(1)
+        time.sleep(0.5)
     collector.save()
