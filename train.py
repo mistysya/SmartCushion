@@ -34,7 +34,7 @@ class Train():
         X_train, X_test, y_train, y_test = model_selection.train_test_split(X, Y, test_size=0.2)
 
         # 建立 random forest 模型
-        forest = ensemble.RandomForestClassifier(n_estimators = 10, max_depth=3, min_samples_split=30)
+        forest = ensemble.RandomForestClassifier(n_estimators = 15, max_depth=4, min_samples_split=30)
         forest_fit = forest.fit(X_train, y_train)
         self.forest = forest
 
