@@ -85,13 +85,13 @@ class SmartCushion():
                    'accept':'application/json',
                    'Content-Type':'application/json'}
         send = {'features': self.sensor_datas}
-        sitting_result = requests.post(url + device_path, headers=headers, json=send)
-        result = sitting_result.json()
-        print('Predict from IoT platform:', result['value'])
+        #sitting_result = requests.post(url + device_path, headers=headers, json=send)
+        #result = sitting_result.json()
+        #print('Predict from IoT platform:', result['value'])
         result_local = self.model.forest.predict([self.sensor_datas])
         print('Predict from Local:', result_local)
-        if int(result_local) != int(result['value']):
-            print("IoT & Local are different!!!")
+        #if int(result_local) != int(result['value']):
+        #    print("IoT & Local are different!!!")
         # return int(result['value'])
         return int(result_local)
 
@@ -111,13 +111,13 @@ class SmartCushion():
 
     def is_sitting_result_wrong(self):
         appear_count = {}
-        for i in range(6):
+        for i in range(4):
             appear_count[str(i)] = self.sitting_history.count(i)
         maximum = max(appear_count.items(), key=operator.itemgetter(1))[0]
-        if appear_count[maximum] > 3:
+        if appear_count[maximum] > 1:
             self.send_sitting_result_to_web(maximum)
             print("Now pose:", maximum)
-            if maximum != '0':
+            if maximum != '0' and maximum != 0:
                 return True
         else:
             print("Can't detect now pose!!")
@@ -149,6 +149,9 @@ class SmartCushion():
         # 3: user long sit
         history = list(self.sitting_history)
 
+        if len(history) < 3:
+            return 0
+
         if history.count(6) >= 2 and history[-1] == 6 and history[-2] == 6 and self.come == True:
             self.leave = True
             self.come = False            
@@ -158,8 +161,9 @@ class SmartCushion():
             self.leave = False
             return 2
         else:
-            self.sit_time += self.sleeping_time
-            print("Keep sitting time:", self.sit_time)
+            if self.come == True:
+                self.sit_time += self.sleeping_time
+                print("Keep sitting time:", self.sit_time)
         if self.sit_time > self.exercise_time:
             return 3
         return 0
