@@ -54,9 +54,6 @@ class SmartCushion():
             self.sit_time = 0
         else:
             pass
-        '''
-        self.user_condition_detect()
-        '''
         time.sleep(self.sleeping_time)
         pass
 
@@ -163,13 +160,13 @@ class SmartCushion():
         return 0
 
     def control_iot_device(self, condition):
-        # turn on light
-        if condition == 1:
-            self.apliance_controller.lightOn()
-            pass
         # turn off light
-        elif condition == 2:
+        if condition == 1:
             self.apliance_controller.lightOff()
+            pass
+        # turn on light
+        elif condition == 2:
+            self.apliance_controller.lightOn()
             pass
         else:
             pass
