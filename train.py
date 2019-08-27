@@ -24,17 +24,17 @@ class Train():
         self.load_data()
 
     def load_data(self):
-        file_path = sys.path[0] + '\\' + self.file_name + '.npy'
+        file_path = sys.path[0] + '/' + self.file_name + '.npy'
         data = np.load(file_path)
         self.data = data.astype(int)
 
     def train(self):
         X = self.data[:,:-1]
         Y = self.data[:, -1]
-        X_train, X_test, y_train, y_test = model_selection.train_test_split(X, Y, test_size=0.3)
+        X_train, X_test, y_train, y_test = model_selection.train_test_split(X, Y, test_size=0.2)
 
         # 建立 random forest 模型
-        forest = ensemble.RandomForestClassifier(n_estimators = 10)
+        forest = ensemble.RandomForestClassifier(n_estimators = 10, max_depth=3, min_samples_split=30)
         forest_fit = forest.fit(X_train, y_train)
         self.forest = forest
 

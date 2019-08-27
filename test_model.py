@@ -10,5 +10,6 @@ model.train()
 
 sensor_collector = SensorDataCollector()
 sensor_data = sensor_collector.get_sensor_data()
+sensor_data = [sensor_data]
 y_test_predicted = model.forest.predict(sensor_data)
 print(y_test_predicted)
