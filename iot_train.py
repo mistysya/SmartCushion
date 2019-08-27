@@ -71,6 +71,8 @@ class Train():
 if __name__ == '__main__':
     pose_type = sys.argv[1]
     print(pose_type)
+    train_data_upload = Train('normal')
+    train_data_upload.delete_sensor_data()
     for k in pose_table:
         print(k)
         train_data_upload = Train(k)
