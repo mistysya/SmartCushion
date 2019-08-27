@@ -4,7 +4,7 @@ import time
 import json
 import numpy as np
 from collections import deque
-from utils.sensor_data_collector import SensorDataCollector
+#from utils.sensor_data_collector import SensorDataCollector
 
 pose_table = {'normal': 0,
               'humpback': 1,
@@ -16,11 +16,11 @@ pose_table = {'normal': 0,
 class CollectSensorData():
     def __init__(self, file_name):
         self.file_name = file_name
-        self.pose_type = pose_table[self.file_name]
+        #self.pose_type = pose_table[self.file_name]
         self.sensor_data = []
         self.history_data = np.zeros((1, 8))
         self.history_average_data = np.zeros((1, 8))
-        self.sensor_collector = SensorDataCollector()
+        #self.sensor_collector = SensorDataCollector()
     
     def save(self):
         data = []
@@ -76,9 +76,9 @@ if __name__ == "__main__":
     file_name = sys.argv[1]
     seconds = sys.argv[2]
     collector = CollectSensorData(file_name)
-    #collector.combine_data()
+    collector.combine_data()
     
-    
+    '''
     for i in range(5, 0, -1):
         print('Collector will start in {0} seconds.'.format(str(i)))
         collector.get_sensor_data()
@@ -93,5 +93,5 @@ if __name__ == "__main__":
         collector.get_average_data()
         time.sleep(0.2)
     collector.save()
-    
+    '''
 

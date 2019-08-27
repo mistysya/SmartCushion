@@ -1,23 +1,27 @@
 import sys
 import json
 import time
+import operator
 import numpy as np
 import requests
 import datetime
+from collections import deque
 from utils.sensor_data_collector import SensorDataCollector
 
 class SmartCushion():
     def __init__(self):
         self.sensor_collector = SensorDataCollector()
+        self.sitting_history = deque(maxlen=10)
         pass
 
     def run(self):
         self.sensor_datas = self.get_sensor_data()
         self.send_sensor_data_to_platform()
         self.sitting_result = self.get_sitting_result()
+        self.sitting_history.append(self.sitting_result)
         print(self.sitting_result)
+        self.send_sitting_result_to_web()
         '''
-        # self.send_sitting_result_to_web(sitting_result)
         if self.is_sitting_result_wrong(self.sitting_result):
             self.give_shock()
         self.user_condition_detect()
@@ -25,7 +29,6 @@ class SmartCushion():
         pass
 
     def get_sensor_data(self):
-        # for test
         sensor_data = self.sensor_collector.get_sensor_data()
         print('Sensor : {0}'.format(sensor_data))
         return sensor_data
@@ -51,27 +54,30 @@ class SmartCushion():
         headers = {'X-API-KEY':'a42252b2-b8dc-4b74-aad1-a46efcbcbb24',
                    'accept':'application/json',
                    'Content-Type':'application/json'}
-        # get latest 30 data from sensor_data
-        # remove peak data
-        # get average of latest 20 data
-        '''
-        file_path = sys.path[0] + '\\train.npy'
-        predict_data = np.load(file_path)
-        predict_data = predict_data.astype(int)
-        data = predict_data[0,:-1]
-        send = {'features': data.tolist()}
-        '''
         send = {'features': self.sensor_datas}
-        #print(send)
         sitting_result = requests.post(url + device_path, headers=headers, json=send)
         result = sitting_result.json()
         return int(result['value'])
 
-    # try to use subscription
-    # def send_sitting_result_to_web(self):
-    #     pass
+    def send_sitting_result_to_web(self):
+        url = "https://iot.cht.com.tw/iot/v1"
+        device_path = "/device/18359721596/rawdata"
+        headers = {'CK':'PKVRB0L9OF0CMISRNT', 'device_id':'18359721596'}
+        current_time = datetime.datetime.now().isoformat()
+        data = {'id':'prediction',
+                'time':current_time,
+                'value':str(self.sitting_result)}
+        r = requests.post(url + device_path, json=data, headers=headers)
+        print(r)
+        print(r.text)
 
-    def is_sitting_result_wrong(self, sitting_result):
+    def is_sitting_result_wrong(self):
+        appear_count = {}
+        for i in range(6):
+            appear_count[str(i)] = self.sitting_history.count(i)
+        maximum = max(appear_count.items(), key=operator.itemgetter(1))[0]
+        if appear_count[maximum] > 3:
+            
         return True
 
     def give_shock(self):

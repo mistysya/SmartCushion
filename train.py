@@ -5,7 +5,7 @@ import requests
 import datetime
 import numpy as np
 
-from sklearn import cross_validation, ensemble, preprocessing, metrics
+from sklearn import model_selection, ensemble, preprocessing, metrics
 
 pose_table = {'normal': 0,
               'humpback': 1,
@@ -31,11 +31,12 @@ class Train():
     def train(self):
         X = self.data[:,:-1]
         Y = self.data[:, -1]
-        X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, Y, test_size=0.3)
+        X_train, X_test, y_train, y_test = model_selection.train_test_split(X, Y, test_size=0.3)
 
         # 建立 random forest 模型
-        forest = ensemble.RandomForestClassifier(n_estimators = 100)
+        forest = ensemble.RandomForestClassifier(n_estimators = 10)
         forest_fit = forest.fit(X_train, y_train)
+        self.forest = forest
 
         # 預測
         y_test_predicted = forest.predict(X_test)
