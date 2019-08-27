@@ -12,17 +12,20 @@
 #
 # Author : sosorry
 # Date   : 2019/08/07
-
+import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 import configparser 
 import json
 import os
+import time
+
+channels = 4
 
 config = configparser.ConfigParser()
 config.read('../cht.conf')
 projectKey = config.get('device-key', 'projectKey')
 deviceId   = config.get('device-key', 'audioDeviceId')
-audioSensorId    = config.get('device-key', 'audioSensorId')
+audioSensorId    = config.get('device-key', 'audioOutputSensorId')
 
 host = "iot.cht.com.tw"
 topic = '/v1/device/' + deviceId + '/sensor/' + audioSensorId + '/rawdata'
@@ -32,17 +35,23 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(topic)
 
 def on_message(client, userdata, msg):
-#    print(msg.payload)
     json_array = json.loads(str(msg.payload)[2:-1])
     print(json_array['value'])
-    if json_array['value'][0] == '0':
-        os.system('aplay close.wav')
-        print('Close')
-    elif json_array['value'][0] == '1':
-        print('Open')
-        os.system('aplay open.wav')
-    else:
-        print('[ERROR]' + jsson_array['value'][0])
+    if json_array['value'][0] == '1':
+        print('Washing machine done')
+        os.system('aplay washing.wav')
+        GPIO.output(channels, GPIO.HIGH)
+        time.sleep(0.5)
+        GPIO.output(channels, GPIO.LOW)
+        time.sleep(0.1)
+        GPIO.output(channels, GPIO.HIGH)
+        time.sleep(0.5)
+        GPIO.output(channels, GPIO.LOW)
+        print("Stop vibration")
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(channels, GPIO.OUT)
 
 client = mqtt.Client()
 client.on_connect = on_connect

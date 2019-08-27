@@ -30,8 +30,7 @@ class SmartCushion():
         self.sitting_history.append(self.sitting_result)
         print(self.sitting_result)
         if self.is_sitting_result_wrong():
-            pass
-            #self.give_shock()
+            self.give_shock()
         user_condition = self.user_condition_detect()
         if user_condition == 1:
             # turn off light
@@ -74,7 +73,7 @@ class SmartCushion():
 
     def get_sitting_result(self):
         url = "https://iot.cht.com.tw/apis/CHTIoT"
-        device_path = "/bigdata/v1/prediction/dr1bp0qn5"
+        device_path = "/bigdata/v1/prediction/8i8gk7t7c"
         headers = {'X-API-KEY':'a42252b2-b8dc-4b74-aad1-a46efcbcbb24',
                    'accept':'application/json',
                    'Content-Type':'application/json'}
@@ -164,7 +163,7 @@ class SmartCushion():
 
 if __name__ == "__main__":
     cushion = SmartCushion()
-    for _ in range(60):
+    while True:
         cushion.run()
     # r = cushion.get_sitting_result()
     # print(r)
