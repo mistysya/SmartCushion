@@ -149,6 +149,15 @@ class SmartCushion():
         # 3: user long sit
         history = list(self.sitting_history)
 
+        if history.count(6) >= 2 and history[-1] == 6 and history[-2] == 6 and self.come == True:
+            self.leave = True
+            self.come = False            
+            return 1
+        elif history.count(6) <= 8 and history[-1] != 6 and history[-2] != 6 and self.leave == True:
+            self.come = True
+            self.leave = False
+            return 2
+
         print('History', history)
         no_body = history[6:]
         print(no_body.count(6))
