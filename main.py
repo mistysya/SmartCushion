@@ -21,7 +21,7 @@ class SmartCushion():
         self.come = False
         self.sit_time = 0
         self.sleeping_time = 2
-        self.exercise_time = 60
+        self.exercise_time = 40
         self.model = train.Train('train')
         self.model.run()
         print("Start train model!")
@@ -157,22 +157,9 @@ class SmartCushion():
             self.come = True
             self.leave = False
             return 2
-
-        print('History', history)
-        no_body = history[6:]
-        print(no_body.count(6))
-        if no_body.count(6) == 3 and no_body.count(6) < 4 and self.come == True:
-            self.sit_time = 0
-            self.leave = True
-            self.come = False
-            return 1
-        elif no_body.count(6) > 0 and no_body.count(6) <= 1 and self.leave == True:
-            self.sit_time = 0
-            self.come = True
-            self.leave = False
-            return 2
         else:
             self.sit_time += self.sleeping_time
+            print("Keep sitting time:", self.sit_time)
         if self.sit_time > self.exercise_time:
             return 3
         return 0
