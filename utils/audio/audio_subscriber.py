@@ -16,6 +16,7 @@
 import paho.mqtt.client as mqtt
 import configparser 
 import json
+import os
 
 config = configparser.ConfigParser()
 config.read('cht.conf')
@@ -33,11 +34,13 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
 #    print(msg.payload)
     json_array = json.loads(str(msg.payload)[2:-1])
-#    print(json_array['value'])
+    print(json_array['value'])
     if json_array['value'][0] == '0':
+        os.system('aplay close.wav')
         print('Close')
     elif json_array['value'][0] == '1':
         print('Open')
+        os.system('aplay open.wav')
     else:
         print('[ERROR]' + jsson_array['value'][0])
 

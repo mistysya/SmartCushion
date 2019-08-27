@@ -24,7 +24,7 @@ class CollectSensorData():
     
     def save(self):
         data = []
-        file_path = sys.path[0] + '\\' + self.file_name + '.npy'
+        file_path = sys.path[0] + '/' + self.file_name + '.npy'
         if os.path.isfile(file_path):
             print("npy file exist.")
             data = np.load(file_path)
@@ -33,7 +33,7 @@ class CollectSensorData():
             print("npy file doesn't exist.")
             data = self.history_average_data[1:,:]
         np.save(file_path, data)
-        np.savetxt(sys.path[0] + '\\' + self.file_name + '.txt', data, delimiter=',', fmt='%d') 
+        np.savetxt(sys.path[0] + '/' + self.file_name + '.txt', data, delimiter=',', fmt='%d') 
 
     def get_sensor_data(self):
         # import random
@@ -66,6 +66,7 @@ if __name__ == "__main__":
     collector = CollectSensorData(file_name)
     for i in range(5, 0, -1):
         print('Collector will start in {0} seconds.'.format(str(i)))
+        collector.get_sensor_data()
         time.sleep(1)
     print()
     for i in range(10):
