@@ -17,6 +17,8 @@ class SmartCushion():
         self.apliance_controller = AplianceController()
         self.sitting_history = deque(maxlen=10)
         self.motor = Motor()
+        self.leave = True
+        self.come = False
         self.sit_time = 0
         self.sleeping_time = 2
         self.exercise_time = 60
@@ -150,11 +152,15 @@ class SmartCushion():
         print('History', history)
         no_body = history[6:]
         print(no_body.count(6))
-        if no_body.count(6) >= 3:
+        if no_body.count(6) == 3 and no_body.count(6) < 4 and self.come == True:
             self.sit_time = 0
+            self.leave = True
+            self.come = False
             return 1
-        elif no_body.count(6) > 0 and no_body.count(6) <= 1:
+        elif no_body.count(6) > 0 and no_body.count(6) <= 1 and self.leave == True:
             self.sit_time = 0
+            self.come = True
+            self.leave = False
             return 2
         else:
             self.sit_time += self.sleeping_time
