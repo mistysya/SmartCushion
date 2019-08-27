@@ -4,8 +4,14 @@ import time
 import json
 import numpy as np
 from collections import deque
+from utils import sensor_data_collector
 
-pose_table = {'test': 0}
+pose_table = {'normal': 0,
+              'humpback': 1,
+              'lie': 2,
+              'right': 3,
+              'left': 4,
+              'one-third': 5}
 
 class CollectSensorData():
     def __init__(self, file_name):
@@ -14,6 +20,7 @@ class CollectSensorData():
         self.sensor_data = []
         self.history_data = np.zeros((1, 8))
         self.history_average_data = np.zeros((1, 8))
+        self.sensor_collector = sensor_data_collector()
     
     def save(self):
         data = []
@@ -29,10 +36,11 @@ class CollectSensorData():
         np.savetxt(sys.path[0] + '\\' + self.file_name + '.txt', data, delimiter=',', fmt='%d') 
 
     def get_sensor_data(self):
-        import random
-        raw_data = []
-        for _ in range(7):
-            raw_data.append(random.randint(0,20000))
+        # import random
+        # raw_data = []
+        # for _ in range(7):
+        #     raw_data.append(random.randint(0,20000))
+        raw_data = self.sensor_collector.get_sensor_data()
         raw_data.append(self.pose_type)
         self.sensor_data = raw_data
         print('Sensor : {0}'.format(raw_data))

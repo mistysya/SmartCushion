@@ -46,9 +46,29 @@ class Train():
         data = np.load(file_path)
         self.data = data.astype(int)
         pass
+    
+    def delete_sensor_data(self):
+        url = "https://iot.cht.com.tw/iot/v1"
+        device_path = "/device/18351549814/rawdata"
+        current_time = datetime.datetime.now().isoformat()
+        for index in range(7):
+            headers = {'CK':'PKVRB0L9OF0CMISRNT',
+                       'device_id':'18351549814',
+                       'sensor_id':'sensor_' + str(index + 1),
+                       'start':'2019-08-25T23:55:00Z',
+                       'end':current_time}
+            r = requests.post(url + device_path, headers=headers)
+        
+        headers = {'CK':'PKVRB0L9OF0CMISRNT',
+                    'device_id':'18351549814',
+                    'sensor_id':[str(sensor_data[-1])],
+                    'start':'2019-08-25T23:55:00Z',
+                    'end':current_time}
+        r = requests.post(url + device_path, headers=headers)
 
 if __name__ == '__main__':
     pose_type = sys.argv[1]
     print(pose_type)
     train_data_upload = Train(pose_type)
-    train_data_upload.run()
+    # train_data_upload.run()
+    train_data_upload.delete_sensor_data()

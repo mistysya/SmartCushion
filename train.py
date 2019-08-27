@@ -7,7 +7,12 @@ import numpy as np
 
 from sklearn import cross_validation, ensemble, preprocessing, metrics
 
-pose_table = {'test': '0'}
+pose_table = {'normal': 0,
+              'humpback': 1,
+              'lie': 2,
+              'right': 3,
+              'left': 4,
+              'one-third': 5}
 
 class Train():
     def __init__(self, file_name):

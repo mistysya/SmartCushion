@@ -25,7 +25,8 @@ class SensorDataCollector():
         self.chan4 = AnalogIn(mcp, MCP.P4)
         self.chan5 = AnalogIn(mcp, MCP.P5)
         self.chan6 = AnalogIn(mcp, MCP.P6)
-    def activate(self):
+
+    def get_sensor_data(self):
         try:
 #        print('Raw-channel0: ', chan0.value)
 #        print('Raw-channel1: ', chan1.value)
@@ -35,15 +36,15 @@ class SensorDataCollector():
 #        print('Raw-channel5: ', chan5.value)
 #        print('Raw-channel6: ', chan6.value)
 #        print('----------------------------')
-            list = [self.chan0.value, self.chan1.value, self.chan2.value, self.chan3.value,
+            data = [self.chan0.value, self.chan1.value, self.chan2.value, self.chan3.value,
                     self.chan4.value, self.chan5.value, self.chan6.value]
-            print(list)
-            return list
+            print(data)
+            return data
         except Exception:
             print('[Exception]: ' + str(Exception))
 
 if __name__ == '__main__':
     fsr = SensorDataCollector()
     while True:
-        fsr.activate()
+        fsr.get_sensor_data()
         time.sleep(1)
