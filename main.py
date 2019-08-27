@@ -1,22 +1,30 @@
 import sys
 import json
 import time
+import train
 import operator
 import numpy as np
 import requests
 import datetime
 from collections import deque
 from utils.sensor_data_collector import SensorDataCollector
+from utils.apliance_controller import AplianceController
 from utils.motor import Motor
 
 class SmartCushion():
     def __init__(self):
         self.sensor_collector = SensorDataCollector()
+        self.apliance_controller = AplianceController()
         self.sitting_history = deque(maxlen=10)
         self.motor = Motor()
         self.sit_time = 0
         self.sleeping_time = 2
         self.exercise_time = 60
+        self.model = train.Train('train')
+        self.model.run()
+        print("Start train model!")
+        self.model.train()
+        print("Train model completely!")
         pass
 
     def run(self):
@@ -80,7 +88,13 @@ class SmartCushion():
         send = {'features': self.sensor_datas}
         sitting_result = requests.post(url + device_path, headers=headers, json=send)
         result = sitting_result.json()
-        return int(result['value'])
+        print('Predict from IoT platform:', result['value'])
+        result_local = self.model.forest.predict([self.sensor_datas])
+        print('Predict from Local:', result_local)
+        if int(result_local) != int(result['value']):
+            print("IoT & Local are different!!!")
+        # return int(result['value'])
+        return int(result_local)
 
     def send_sitting_result_to_web(self, result):
         url = "https://iot.cht.com.tw/iot/v1"
@@ -151,15 +165,15 @@ class SmartCushion():
     def control_iot_device(self, condition):
         # turn on light
         if condition == 1:
+            self.apliance_controller.lightOn()
             pass
         # turn off light
         elif condition == 2:
+            self.apliance_controller.lightOff()
             pass
         else:
             pass
 
-    def receive_iot_message(self):
-        pass
 
 if __name__ == "__main__":
     cushion = SmartCushion()
