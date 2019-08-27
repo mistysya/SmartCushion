@@ -4,7 +4,7 @@ import time
 import json
 import numpy as np
 from collections import deque
-#from utils.sensor_data_collector import SensorDataCollector
+from utils.sensor_data_collector import SensorDataCollector
 
 pose_table = {'normal': 0,
               'humpback': 1,
@@ -20,7 +20,7 @@ class CollectSensorData():
         self.sensor_data = []
         self.history_data = np.zeros((1, 8))
         self.history_average_data = np.zeros((1, 8))
-        #self.sensor_collector = SensorDataCollector()
+        self.sensor_collector = SensorDataCollector()
     
     def save(self):
         data = []
