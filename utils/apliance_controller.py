@@ -48,7 +48,7 @@ class AplianceController():
         t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
         payload = [{"id":self.sensorId,"value":['0'], "time":t}]
-        print('Light on :' + str(payload))
+        print('Light off :' + str(payload))
         self.client.publish(self.topic, "%s" % ( json.dumps(payload) ))
 
 

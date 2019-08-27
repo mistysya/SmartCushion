@@ -146,11 +146,11 @@ class SmartCushion():
         # 2: user come
         # 3: user long sit
         history = list(self.sitting_history)
-        no_body = history[6:]
-        if no_body.count(6) >= 3:
+        no_body = history[5:]
+        if no_body.count(6) >= 3 and no_body.count(6) < 4:
             self.sit_time = 0
             return 1
-        elif no_body.count(6) <= 1:
+        elif no_body.count(6) > 0 and no_body.count(6) <= 1:
             self.sit_time = 0
             return 2
         else:
