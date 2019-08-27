@@ -20,6 +20,7 @@ class SmartCushion():
         pass
 
     def run(self):
+        print("---start---")
         self.sensor_datas = self.get_sensor_data()
         self.send_sensor_data_to_platform()
         if self.detect_no_body():
@@ -29,7 +30,8 @@ class SmartCushion():
         self.sitting_history.append(self.sitting_result)
         print(self.sitting_result)
         if self.is_sitting_result_wrong():
-            self.give_shock()
+            pass
+            #self.give_shock()
         user_condition = self.user_condition_detect()
         if user_condition == 1:
             # turn off light
@@ -69,7 +71,6 @@ class SmartCushion():
             iot_format_datas.append(data)
         r = requests.post(url + device_path, json=iot_format_datas, headers=headers)
         print(r)
-        print(r.text)
 
     def get_sitting_result(self):
         url = "https://iot.cht.com.tw/apis/CHTIoT"
@@ -89,8 +90,10 @@ class SmartCushion():
         current_time = datetime.datetime.now().isoformat()
         data = {'id':'prediction',
                 'time':current_time,
-                'value':result}
-        r = requests.post(url + device_path, json=data, headers=headers)
+                'value':[result]}
+        d = []
+        d.append(data)
+        r = requests.post(url + device_path, json=d, headers=headers)
         print(r)
         print(r.text)
 
@@ -132,7 +135,8 @@ class SmartCushion():
         # 1: user leave
         # 2: user come
         # 3: user long sit
-        no_body = self.sitting_history[-4:]
+        history = list(self.sitting_history)
+        no_body = history[6:]
         if no_body.count(6) >= 3:
             self.sit_time = 0
             return 1

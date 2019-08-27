@@ -7,10 +7,11 @@ channels = 7
 class Motor():
     def __init__(self):
         # to use Raspberry Pi board pin numbers
-        GPIO.setmode(GPIO.BOARD)
+        #GPIO.setmode(GPIO.BOARD)
 
-        GPIO.setup(channels, GPIO.OUT)
+        #GPIO.setup(channels, GPIO.OUT)
 
+        pass
     def __del__(self):
         GPIO.cleanup(7)
 
